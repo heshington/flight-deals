@@ -29,7 +29,7 @@ class DataManager:
             # "Authorization": config('BEARER_TOKEN')
         }
         for city in self.destination_data:
-            print(city['iataCode'])
+
             new_data = {
                 "price": {
                     "iataCode": city['iataCode']
