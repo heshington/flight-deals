@@ -13,12 +13,12 @@ class FlightSearch:
         }
 
         parameters = {
-            "term": "berlin",
+            "term": city,
             "location_types": "airport"
         }
 
         response = requests.get(flight_url_endpoint, params=parameters, headers=headers)
         data = response.json()
-        # print(data)
-        print(data.get('locations')[0].get('id'))
+
+        return(data.get('locations')[0].get('id'))
 

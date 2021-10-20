@@ -4,37 +4,37 @@ import requests
 
 class DataManager:
     # This class is responsible for talking to the Google Sheet.
+    def __init__(self):
+        self.destination_data = {}
 
-    # def get_city_names(self):
-    #     # Get from spreadsheet
-    #     end_point_url = "https://api.sheety.co/33093744d338c796ac3b15096c2a0e35/flightDeals/prices"
-    #
-    #     headers = {
-    #         "Content-Type": "application/json",
-    #         "Authorization": config('BEARER_TOKEN')
-    #     }
-    #     response = requests.get(url=end_point_url, headers=headers)
-    #     data = response.json()
-    #
-    #     lst = data.get('prices')
-    #     cities = []
-    #     for i in range(len(lst)):
-    #         for key in lst[i]:
-    #             if key == 'city':
-    #                 cities.append(lst[i]["city"])
-    #     return cities
+        # Get from spreadsheet
+    def get_data(self):
+        end_point_url = "https://api.sheety.co/3a57a1832d829121cd2f4b974397be4e/flightDeals/prices"
 
-    headers = {
-                "Content-Type": "application/json",
-                "Authorization": config('BEARER_TOKEN')
-            }
-    #post url
-    end_point_post_url = "https://api.sheety.co/33093744d338c796ac3b15096c2a0e35/flightDeals/prices"
+        response = requests.get(url=end_point_url)
+        data = response.json()
+        self.destination_data = data["prices"]
+        # 3. Try importing pretty print and printing the data out again using pprint() to see it formatted.
+        # pprint(data)
+        return self.destination_data
 
-    airport_code = {
-        "price": {
-            "IATA Code": "BER"
+
+    def update_row(self):
+        end_point_url = f"https://api.sheety.co/3a57a1832d829121cd2f4b974397be4e/flightDeals/prices/"
+
+        print(end_point_url)
+        print(self.destination_data)
+        headers = {
+            "Content-Type": "application/json",
+            # "Authorization": config('BEARER_TOKEN')
         }
-    }
-    response = requests.post(url=end_point_post_url, json=airport_code, headers=headers)
-    print(response.text)
+        for city in self.destination_data:
+            print(city['iataCode'])
+            new_data = {
+                "price": {
+                    "iataCode": city['iataCode']
+                }
+            }
+            response = requests.put(url=f"{end_point_url}/{city['id']}", json=new_data, headers=headers)
+            print(response.text)
+
